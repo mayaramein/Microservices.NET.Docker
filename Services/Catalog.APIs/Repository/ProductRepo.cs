@@ -16,7 +16,7 @@ namespace Catalog.APIs.Repository
             return _context.Products.InsertOneAsync(product);
         }
 
-        public async Task<bool> DeletePoduct(Product product)
+        public async Task<bool> DeleteProduct(Product product)
         {
             FilterDefinition<Product> filterDefinition = Builders<Product>.Filter.Eq(p => p.Id, product.Id);
             DeleteResult deleteResult = await _context.Products.DeleteOneAsync(filterDefinition);
@@ -24,6 +24,13 @@ namespace Catalog.APIs.Repository
             return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
         }
 
+        public async Task<bool> DeleteProductById(int id)
+        {
+            FilterDefinition<Product> filterDefinition = Builders<Product>.Filter.Eq(p => p.Id, id);
+            DeleteResult deleteResult = await _context.Products.DeleteOneAsync(filterDefinition);
+
+            return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
+        }
         public async Task<IEnumerable<Product>> GetAllProducts()
         {
             return await _context
@@ -59,7 +66,7 @@ namespace Catalog.APIs.Repository
         }
 
        
-        public async Task<bool> UpdatePoduct(Product product)
+        public async Task<bool> UpdateProduct(Product product)
         {
             var updateResult = await _context
                 .Products

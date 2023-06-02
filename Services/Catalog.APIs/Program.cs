@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Microsoft.OpenApi.Mod
 
 builder.Services.Configure<DatabaseSettings>(option => builder.Configuration.GetSection("DatabaseSettings").Bind(option));
 
-builder.Services.AddSingleton<ICatalogContext, CatalogContext>();
+builder.Services.AddScoped<ICatalogContext, CatalogContext>();
 builder.Services.AddScoped<IProductRepo, ProductRepo>(); 
 
 #endregion
@@ -26,9 +26,13 @@ builder.Services.AddScoped<IProductRepo, ProductRepo>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-var Env = app.Environment;
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
